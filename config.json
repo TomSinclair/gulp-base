@@ -1,0 +1,12 @@
+{
+	"site": {
+		"description": "Site meta description.",
+		"title": "Site title",
+		"url": "http://google.co.uk"
+	},
+	"social": {
+		"title": "Social share title",
+		"description": "Social share description",
+		"twitterHandle": "@Twitter"
+	}
+}

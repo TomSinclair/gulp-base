@@ -1,0 +1,227 @@
+/* Tools - Helpers
+------------------------- */
+
+// Mixins
+// -------------------------
+
+/// @mixin t-active
+/// Standardises pseudo states for accessibility.
+///
+/// @access public
+///
+/// @example
+///	@include t-active;
+@mixin t-active {
+
+	&:hover,
+	&:focus,
+	&:active {
+		@content;
+	}
+}
+
+/// @mixin t-flex-image
+/// Apply to basic responsive flexible image styling.
+///
+/// @access public
+///
+/// @example
+///	@include t-flex-image;
+@mixin t-flex-image {
+	max-width: 100%;
+	width: 100%;
+
+	@include t-print {
+		height: auto;
+	}
+}
+
+/// @mixin t-hidden
+/// Visibly hide elements without removing the target element from the render tree.
+///
+/// @access public
+///
+/// @example
+///	@include t-hidden;
+@mixin t-hidden {
+    border: 0!important;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+    height: 1px!important;
+    overflow: hidden;
+    padding: 0!important;
+	position: absolute!important;
+    width: 1px!important;
+}
+
+/// @mixin t-hidden-text
+/// Visibly hide text without removing the target element from the render tree.
+///
+/// @access public
+///
+/// @example
+///	@include t-hidden-text;
+@mixin t-hidden-text {
+	font-size: 0!important;
+	line-height: 0!important;
+}
+
+/// @mixin t-block-center
+/// Center an element
+///
+/// @access public
+/// @param {Boolean} $block - Set display to block.
+///
+/// @example
+/// @include t-block-center;
+@mixin t-block-center($block: false) {
+	margin-left: auto;
+	margin-right: auto;
+	@if $block == true {
+		display: block;
+	}
+}
+
+/// @mixin t-inline-list
+/// Make an inline-block list
+///
+/// @access public
+/// @param {Boolean} $spacing - Include horizontal spacing.
+///
+/// @example
+/// @include t-inline-list;
+@mixin t-inline-list($spacing: true) {
+
+	$list-item-spacing: t-rem(floor($grids-gutter/2));
+
+	display: inline-block;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+
+	> * {
+
+		display: inline-block;
+		margin: 0;
+		padding: 0;
+
+		@if $spacing {
+			margin-left: $list-item-spacing;
+			margin-right: $list-item-spacing;
+			&:first-child {
+				margin-left: 0;
+			}
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+
+	}
+}
+
+/// @mixin t-truncate
+/// Make a element truncate text once it's larger than the container
+///
+/// @access public
+/// @param {Number} $width - Element width.
+///
+/// @example
+/// @include t-truncate;
+@mixin t-truncate($width: 100%) {
+	width: $width;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: inline-block;
+}
+
+/// @mixin t-last-child
+/// Removes final element spacing and optional border.
+///
+/// @access public
+/// @param {Boolean} $borders - Also remove bottom border.
+///
+/// @example
+/// @include t-last-child;
+@mixin t-last-child($borders: false) {
+	margin-bottom: 0;
+	@if $borders {
+		border-bottom: 0;
+	}
+}
+
+/// @mixin t-text-align
+/// Outputs text-align property with corresponding RTL alternative where needed
+///
+/// @access public
+/// @param {String} $alignment - Element text alignment.
+///
+/// @include t-text-align(left);
+@mixin t-text-align($alignment) {
+	@if $alignment == "left" {
+		text-align: left;
+	}
+	@elseif $alignment == "right" {
+		text-align: right;
+	} @else {
+		text-align: center;
+	}
+}
+
+/// @mixin t-responsive-alignment
+/// Output text align property wrapped in an appropriate mediaquery
+///
+/// @access public
+/// @param {String|Number} $breakpoint - Specified breakpoint from which to apply alignment styles.
+/// @param {String} $alignment - Element text alignment.
+/// @param {String} $type - Media query width rule.
+///
+/// @example
+/// @include t-responsive-alignment(medium, left, min);
+@mixin t-responsive-alignment($breakpoint, $alignment, $type: min) {
+	@if $breakpoint {
+		@if $type == max {
+			@include t-respond-to-max($breakpoint) {
+				@include t-text-align($alignment);
+			}
+		} @else {
+			@include t-respond-to-min($breakpoint) {
+				@include t-text-align($alignment);
+			}
+		}
+	} @else {
+		@include t-text-align($alignment);
+	}
+}
+
+/// @mixin t-inline-layout-fix
+/// Include the standard CSS for constructing flexible layout with inline block elements
+/// pass a selector if you want to reset subelements letter-spacing back to normal.
+///
+/// @access public
+/// @param {String} $selector - Sub-element selector to return letter-spacing to normal.
+///
+/// @include t-inline-layout-fix;
+@mixin t-inline-layout-fix($selector: false) {
+	letter-spacing: -0.42em;
+	@if $selector {
+		#{$selector} {
+			letter-spacing: normal;
+		}
+	}
+}
+
+/// @mixin t-absolute-center
+/// Positions an element in the exact center of a relative container.
+///
+/// @access public
+/// @param {String} $position - Position value.
+///
+/// @example
+/// @include t-absolute-center;
+@mixin t-absolute-center($position: absolute) {
+	left: 50%;
+	position: $position;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}

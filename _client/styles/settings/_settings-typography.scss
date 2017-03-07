@@ -1,0 +1,85 @@
+/* Settings - Typography
+------------------------- */
+
+$s-base-font-family: Helvetica, Arial, sans-serif;
+$s-base-font-size: 15px;
+$s-base-line-height: 1;
+$s-fonts-path: '/_client/fonts/';
+
+/// $s-fonts
+/// Establishes a map containing a series of font files located in the specified fonts directory.
+///
+/// @example
+/// $s-fonts: (
+/// 	'FontName': (
+/// 		file: 'font-file-name',
+/// 		weight: normal,
+/// 		stack: '"FontName", Arial, Helvetica, sans-serif'
+/// 	)
+/// );
+$s-fonts: (
+	'Helvetica Neue Thin': (
+		file: 'helveticaneuethin',
+		weight: normal,
+		stack: '"Helvetica Neue Thin", Arial, Helvetica, sans-serif'
+	),
+	'Helvetica Neue Bold': (
+		file: 'helveticaneuebold',
+		weight: normal,
+		stack: '"Helvetica Neue Bold", Arial, Helvetica, sans-serif'
+	),
+	'icons': (
+		file: 'icons',
+		weight: normal,
+		stack: 'icons'
+	)
+);
+
+/// $s-type-sizing
+/// Establishes a map containing abstract font-sizing declarations with matching breakpoint specifications.
+///
+/// @example
+/// $s-type-sizing: (
+/// 	abstract: (
+/// 		small: (
+/// 			font-size: 10px,
+/// 			line-height: 20px
+/// 		),
+/// 		medium: (
+/// 			font-size: 20px,
+/// 			line-height: 40px
+/// 		)
+/// 	)
+/// );
+$s-type-sizing: (
+	xsmall: (
+		small: (
+			font-size: 12px,
+			line-height: 1.4
+		)
+	),
+	small: (
+		small: (
+			font-size: 14px,
+			line-height: 1.4
+		)
+	),
+	medium: (
+		small: (
+			font-size: 16px,
+			line-height: 1.4
+		)
+	),
+	large: (
+		small: (
+			font-size: 18px,
+			line-height: 1.25
+		)
+	),
+	xlarge: (
+		small: (
+			font-size: 24px,
+			line-height: 1.25
+		)
+	)
+);

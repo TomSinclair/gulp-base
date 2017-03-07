@@ -1,0 +1,24 @@
+/* Settings - Colours
+------------------------- */
+
+/// $s-colours
+/// Establishes a map containing colour values and any corresponding tones.
+///
+/// @example
+/// $s-colours: (
+///     black: (
+/// 		base: #000
+///     ),
+///     white: (
+/// 		base: #FFF
+///     )
+/// );
+
+$s-colours: (
+	black: (
+		base: #000
+	),
+	white: (
+		base: #FFF
+	)
+);
