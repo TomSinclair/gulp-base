@@ -14,27 +14,25 @@
 /// @example
 /// t-rem(2em 20px 2rem 20px);
 @function t-rem($values) {
+  @if type-of($values) == 'list' {
+    $rems: ();
 
-	@if type-of($values) == "list" {
-		$rems: ();
+    @each $value in $values {
+      $rems: append($rems, t-rem($value));
+    }
 
-		@each $value in $values {
-			$rems: append($rems, t-rem($value));
-		}
+    @return $rems;
+  }
 
-		@return $rems;
-	}
+  @if type-of($values) == 'number' {
+    @if $values == 0 {
+      @return $values;
+    } @else if unit($values) == px {
+      @return ($values / $s-base-font-size) * 1rem;
+    }
+  }
 
-	@if type-of($values) == "number" {
-		@if $values == 0 {
-			@return $values;
-		}
-		@else if unit($values) == px {
-			@return ($values / $s-base-font-size) * 1rem;
-		}
-	}
-
-	@return $values;
+  @return $values;
 }
 
 /// @function t-map-value
@@ -47,32 +45,34 @@
 ///
 /// @example
 /// t-map-value($map, (key1, key2));
-@function t-map-value($map-value, $keys, $key-chain: "", $base-map: null) {
+@function t-map-value($map-value, $keys, $key-chain: '', $base-map: null) {
+  @if (type-of($map-value) != map or length($keys) == 0) {
+    @if ($map-value == null) {
+      @error 't-map-value was unable to resolve #{$key-chain} from #{$base-map}';
+    }
 
-	@if(type-of($map-value) != map or length($keys) == 0) {
+    @return $map-value;
+  }
 
-		@if($map-value == null) {
-			@error 't-map-value was unable to resolve #{$key-chain} from #{$base-map}';
-		}
+  $current-key: nth($keys, 1);
+  $remaining-keys: t-slice($keys, 2);
 
-		@return $map-value;
-	}
+  @if ($key-chain != '') {
+    $key-chain: $key-chain + '.' + $current-key;
+  } @else {
+    $key-chain: $current-key;
+  }
 
-	$current-key: nth($keys, 1);
-	$remaining-keys: t-slice($keys, 2);
+  @if ($base-map == null) {
+    $base-map: $map-value;
+  }
 
-	@if($key-chain != "") {
-		$key-chain: $key-chain + "." + $current-key;
-	}
-	@else {
-		$key-chain: $current-key;
-	}
-
-	@if($base-map == null) {
-		$base-map: $map-value;
-	}
-
-	@return t-map-value(map-get($map-value, $current-key), $remaining-keys, $key-chain, $base-map);
+  @return t-map-value(
+    map-get($map-value, $current-key),
+    $remaining-keys,
+    $key-chain,
+    $base-map
+  );
 }
 
 /// @function t-slice
@@ -86,17 +86,25 @@
 /// @example
 /// t-slice($list, 1, 2);
 @function t-slice($list, $start: 1, $end: length($list)) {
-	$result: ();
+  $result: ();
 
-	@if $start > $end or $start < 1 or $end < 1 or $start > length($list) or $end > length($list)  {
-		@return $result;
-	}
-	@else {
+  @if $start >
+    $end or
+    $start <
+    1 or
+    $end <
+    1 or
+    $start >
+    length($list) or
+    $end >
+    length($list)
+  {
+    @return $result;
+  } @else {
+    @for $i from $start through $end {
+      $result: append($result, nth($list, $i));
+    }
+  }
 
-		@for $i from $start through $end {
-			$result: append($result, nth($list, $i));
-		}
-	}
-
-	@return $result;
+  @return $result;
 }

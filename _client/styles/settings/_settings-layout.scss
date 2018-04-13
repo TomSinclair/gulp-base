@@ -13,11 +13,11 @@
 /// 	4: 1000
 /// );
 $s-layers: (
-	0: 0,
-	1: 1,
-	2: 10,
-	3: 100,
-	4: 1000
+  0: 0,
+  1: 1,
+  2: 10,
+  3: 100,
+  4: 1000
 );
 
 /// $s-vertical-layout-spacing
@@ -39,32 +39,20 @@ $s-layers: (
 /// 	)
 /// );
 $s-vertical-layout-spacing: (
-	xsmall: (
-		small: 5px,
-	),
-	small: (
-		small: 10px,
-	),
-	medium: (
-		small: 20px,
-	),
-	large: (
-		small: 30px,
-	),
-	xlarge: (
-		small: 45px,
-	),
-	xxlarge: (
-		small: 60px,
-	)
+  xsmall: (small: 5px),
+  small: (small: 10px),
+  medium: (small: 20px),
+  large: (small: 30px),
+  xlarge: (small: 45px),
+  xxlarge: (small: 60px)
 );
 
 /// $s-document-layout
 /// Establishes a map containing key document layout settings.
-$s-document-layout:(
-	max-width: 100%,
-	max-content-width: 1440px,
-	reveal-width: 260px
+$s-document-layout: (
+  max-width: 100%,
+  max-content-width: 1440px,
+  reveal-width: 260px
 );
 
 /// $s-site-header-breakpoint

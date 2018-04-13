@@ -15,15 +15,20 @@
 /// @example
 /// t-get-vertical-spacing-type-adjust(small, medium);
 @function t-get-vertical-spacing-type-adjust($type-size, $breakpoint-name) {
+  $font-size: t-map-value(
+    $s-type-sizing,
+    ($type-size, $breakpoint-name, font-size)
+  );
+  $line-height: t-map-value(
+    $s-type-sizing,
+    ($type-size, $breakpoint-name, line-height)
+  );
 
-	$font-size: t-map-value($s-type-sizing, ($type-size, $breakpoint-name, font-size));
-	$line-height: t-map-value($s-type-sizing, ($type-size, $breakpoint-name, line-height));
+  @if unitless($line-height) {
+    $line-height: $line-height * $font-size;
+  }
 
-	@if unitless($line-height) {
-		$line-height: $line-height * $font-size;
-	}
-
-	@return ($line-height - $font-size) / 2;
+  @return ($line-height - $font-size) / 2;
 }
 
 /// @function t-get-vertical-spacing
@@ -37,20 +42,26 @@
 ///
 /// @example
 /// t-get-vertical-spacing(small, medium);
-@function t-get-vertical-spacing($spacing-name, $breakpoint-name: small, $type-size: null) {
+@function t-get-vertical-spacing(
+  $spacing-name,
+  $breakpoint-name: small,
+  $type-size: null
+) {
+  @if (map-has-key($s-breakpoints, $breakpoint-name)) {
+    $spacing: t-map-value(
+      $s-vertical-layout-spacing,
+      ($spacing-name, $breakpoint-name)
+    );
+    $adjust: 0;
 
-	@if(map-has-key($s-breakpoints, $breakpoint-name)) {
-		$spacing: t-map-value($s-vertical-layout-spacing, ($spacing-name, $breakpoint-name));
-		$adjust: 0;
+    @if ($type-size != null) {
+      $adjust: t-get-vertical-spacing-type-adjust($type-size, $breakpoint-name);
+    }
 
-		@if($type-size != null) {
-			$adjust: t-get-vertical-spacing-type-adjust($type-size, $breakpoint-name);
-		}
+    @return t-rem($spacing - $adjust);
+  }
 
-		@return t-rem($spacing - $adjust);
-	}
-
-	@return null;
+  @return null;
 }
 
 // Mixins
@@ -67,33 +78,43 @@
 ///
 /// @example
 ///	@include t-vertical-spacing(small, (margin-bottom, padding-bottom));
-@mixin t-vertical-spacing($spacing-name, $props, $type-size: null, $default-breakpoint-name: 'small') {
+@mixin t-vertical-spacing(
+  $spacing-name,
+  $props,
+  $type-size: null,
+  $default-breakpoint-name: 'small'
+) {
+  @each $prop in $props {
+    $default-spacing: t-get-vertical-spacing(
+      $spacing-name,
+      $default-breakpoint-name,
+      $type-size
+    );
 
-	@each $prop in $props {
+    @if ($default-spacing != null) {
+      #{$prop}: $default-spacing;
+    }
+  }
 
-		$default-spacing: t-get-vertical-spacing($spacing-name, $default-breakpoint-name, $type-size);
+  @each $breakpoint-name
+    in map-keys(map-get($s-vertical-layout-spacing, $spacing-name))
+  {
+    @if $breakpoint-name != $default-breakpoint-name {
+      $spacing: t-get-vertical-spacing(
+        $spacing-name,
+        $breakpoint-name,
+        $type-size
+      );
 
-		@if($default-spacing != null) {
-			#{$prop}: $default-spacing;
-		}
-	}
-
-	@each $breakpoint-name in map-keys(map-get($s-vertical-layout-spacing, $spacing-name)) {
-
-		@if $breakpoint-name != $default-breakpoint-name {
-
-			$spacing: t-get-vertical-spacing($spacing-name, $breakpoint-name, $type-size);
-
-			@if($spacing != null) {
-				@include t-respond-to-min($breakpoint-name) {
-
-					@each $prop in $props {
-						#{$prop}: $spacing;
-					}
-				}
-			}
-		}
-	}
+      @if ($spacing != null) {
+        @include t-respond-to-min($breakpoint-name) {
+          @each $prop in $props {
+            #{$prop}: $spacing;
+          }
+        }
+      }
+    }
+  }
 }
 
 /// @mixin t-layer
@@ -106,7 +127,7 @@
 /// @example
 /// @include t-layer(2, 1);
 @mixin t-layer($level: 0, $modifier: 0) {
-	z-index: map-get($s-layers, $level) + $modifier;
+  z-index: map-get($s-layers, $level) + $modifier;
 }
 
 /// @mixin t-inline-container
@@ -117,7 +138,7 @@
 /// @example
 /// @include t-inline-container;
 @mixin t-inline-container {
-	letter-spacing: -0.31em;
+  letter-spacing: -0.31em;
 }
 
 /// @mixin t-inline-item
@@ -129,9 +150,9 @@
 /// @example
 /// @include t-inline-container;
 @mixin t-inline-item($vertical-align: top) {
-	display: inline-block;
-	letter-spacing: normal;
-	vertical-align: $vertical-align;
+  display: inline-block;
+  letter-spacing: normal;
+  vertical-align: $vertical-align;
 }
 
 // @mixin  t-maintain-ratio
@@ -143,16 +164,15 @@
 // @example
 // @include maintain-ratio(16 9);
 @mixin t-maintain-ratio($ratio: 1 1) {
+  @if length($ratio) < 2 or length($ratio) > 2 {
+    @warn '$ratio must be a list with two values.';
+  }
 
-	@if length($ratio) < 2 or length($ratio) > 2 {
-		@warn "$ratio must be a list with two values.";
-	}
-
-	height: 0;
-	overflow: hidden;
-	padding-bottom: percentage(nth($ratio, 2) / nth($ratio, 1));
-	position: relative;
-	width: 100%;
+  height: 0;
+  overflow: hidden;
+  padding-bottom: percentage(nth($ratio, 2) / nth($ratio, 1));
+  position: relative;
+  width: 100%;
 }
 
 /// @mixin t-site-constraint
@@ -163,25 +183,27 @@
 /// @example
 ///	@include t-site-constraint;
 @mixin t-site-constraint {
-	@include t-block-center;
-	max-width: (map-get($s-document-layout, max-content-width) + ($grids-gutter * 2));
-	padding-left: t-rem($grids-gutter);
-	padding-right: t-rem($grids-gutter);
+  @include t-block-center;
+  max-width: (
+    map-get($s-document-layout, max-content-width) + ($grids-gutter * 2)
+  );
+  padding-left: t-rem($grids-gutter);
+  padding-right: t-rem($grids-gutter);
 
-	@include t-respond-to-min(large) {
-		padding-left: t-rem($grids-gutter * 2);
-		padding-right: t-rem($grids-gutter * 2);
-	}
+  @include t-respond-to-min(large) {
+    padding-left: t-rem($grids-gutter * 2);
+    padding-right: t-rem($grids-gutter * 2);
+  }
 
-	&--full {
-		padding: 0;
+  &--full {
+    padding: 0;
 
-		@include t-respond-to-min(large) {
-			padding: 0;
-		}
-	}
+    @include t-respond-to-min(large) {
+      padding: 0;
+    }
+  }
 
-	&--relative {
-		position: relative;
-	}
+  &--relative {
+    position: relative;
+  }
 }

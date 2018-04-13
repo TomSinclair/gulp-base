@@ -1,44 +1,37 @@
 /* 1. Settings
 ------------------------- */
 
-@import "settings/settings";
-
+@import 'settings/settings';
 
 /* 2. Tools
 ------------------------- */
 
-@import "tools/tools";
-
+@import 'tools/tools';
 
 /* 3. Reset
 ------------------------- */
 
-@import "normalize";
-
+@import 'normalize';
 
 /* 4. Resources
 ------------------------- */
 
-@import "resources/resources";
-
+@import 'resources/resources';
 
 /* 5. Base
 ------------------------- */
 
-@import "base/base";
-
+@import 'base/base';
 
 /* 6. Elements
 ------------------------- */
 
-@import "_elements/elements";
-
+@import '_elements/elements';
 
 /* 7. Components
 ------------------------- */
 
-@import "_components/components";
-
+@import '_components/components';
 
 /* 8. Helpers / Overrides
 ------------------------- */

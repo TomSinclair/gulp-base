@@ -16,5 +16,5 @@
 /// t-colour(black);
 
 @function t-colour($colour, $tone: base) {
-	@return t-map-value($s-colours, ($colour, $tone));
+  @return t-map-value($s-colours, ($colour, $tone));
 }

@@ -2,27 +2,26 @@
 ------------------------- */
 
 body {
-	background: t-colour(white);
-	min-height: 100vh;
-	overflow-x: hidden;
+  background: t-colour(white);
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .site {
-	@include t-respond-to-min(medium) {
-		@include t-layer(1);
-		position: relative;
-	}
+  @include t-respond-to-min(medium) {
+    @include t-layer(1);
+    position: relative;
+  }
 }
 
 .site__constraint {
+  @include t-site-constraint;
 
-	@include t-site-constraint;
-	
-	&--full {
-		padding: 0!important;
-	}
+  &--full {
+    padding: 0 !important;
+  }
 
-	&--relative {
-		position: relative;
-	}
+  &--relative {
+    position: relative;
+  }
 }
