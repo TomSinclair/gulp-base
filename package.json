@@ -24,8 +24,8 @@
   "dependencies": {
     "babel-runtime": "^6.26.0",
     "gulp": "^3.9.1",
-    "gulp-nunjucks-render": "^2.0.0",
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "panini": "^1.6.2"
   },
   "devDependencies": {
     "asset-builder": "^1.1.0",
@@ -43,13 +43,14 @@
     "eslint": "^4.19.1",
     "gulp-babel": "^7.0.1",
     "gulp-concat": "^2.6.1",
+    "gulp-handlebars": "^5.0.2",
     "gulp-imagemin": "^3.1.1",
-    "gulp-nunjucks-md": "^1.0.6",
     "gulp-postcss": "^6.3.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^2.0.1",
+    "handlebars": "^4.0.11",
     "imagemin-pngcrush": "^5.0.0",
     "run-sequence": "^1.2.2",
     "webpack": "^4.5.0",

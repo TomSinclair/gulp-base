@@ -1,72 +1,102 @@
 'use strict';
 
-import gulp from 'gulp';
-import sourcemaps from 'gulp-sourcemaps';
-import concat from 'gulp-concat';
-import imagemin from 'gulp-imagemin';
-import nunjucksMd from 'gulp-nunjucks-md';
-import postcss from 'gulp-postcss';
-import sass from 'gulp-sass';
-import uglify from 'gulp-uglify';
-import browserSync from 'browser-sync';
 import autoprefixer from 'autoprefixer';
+import babel from 'gulp-babel';
+import browserSync from 'browser-sync';
+import concat from 'gulp-concat';
 import del from 'del';
+import gulp from 'gulp';
+import handlebars from 'gulp-handlebars';
+import imagemin from 'gulp-imagemin';
+import panini from 'panini';
+import postcss from 'gulp-postcss';
 import mqpacker from 'css-mqpacker';
 import rename from 'gulp-rename';
 import runSequence from 'run-sequence';
-import babel from 'gulp-babel';
-
+import sass from 'gulp-sass';
+import sourcemaps from 'gulp-sourcemaps';
+import uglify from 'gulp-uglify';
 import webpack from 'webpack';
-import webpackStream from 'webpack-stream';
 import webpackConfig from './webpack.config.js';
-
-const reload = browserSync.reload;
+import webpackStream from 'webpack-stream';
 
 // Base file paths
 const basePath = {
-  src: '_client/',
-  dest: 'dist/',
-  views: 'views/'
+  src: 'src',
+  assets: 'assets',
+  dest: 'dist'
 };
 
 // View paths
 const viewAssets = {
-  root: basePath.views,
-  components: basePath.views + 'components/',
-  elements: basePath.views + 'elements/'
+  pages: `${basePath.src}/pages`,
+  partials: `${basePath.src}/partials`,
+  data: `${basePath.src}/data`,
+  layouts: `${basePath.src}/layouts`
 };
 
 // Source paths
 const srcAssets = {
-  root: basePath.src,
-  images: basePath.src + 'images/',
-  scripts: basePath.src + 'scripts/',
-  styles: basePath.src + 'styles/'
+  root: `${basePath.src}/${basePath.assets}/`,
+  images: `${basePath.src}/${basePath.assets}/images`,
+  scripts: `${basePath.src}/${basePath.assets}/js`,
+  styles: `${basePath.src}/${basePath.assets}/scss`
 };
 
 // Destination paths
 const destAssets = {
-  root: basePath.dest,
-  images: basePath.dest + 'img/',
-  scripts: basePath.dest + 'js/',
-  styles: basePath.dest + 'css/'
+  root: `${basePath.dest}/`,
+  images: `${basePath.dest}/img/`,
+  scripts: `${basePath.dest}/js/`,
+  styles: `${basePath.dest}/css/`
 };
 
 // Sass file paths
 const sassFiles = [srcAssets.styles];
 
-// Nunjucks file paths
+// Hanelbars file paths
 const viewFiles = [viewAssets.root, viewAssets.components, viewAssets.elements];
+
+// Load updated HTML templates and partials into Panini
+gulp.task('refresh', () => {
+  panini.refresh();
+});
+
+// Delete the "dist" folder
+gulp.task('clean', () => {
+  return del([destAssets.root]);
+});
+
+// Reload the browser with BrowserSync
+function reload(done) {
+  browser.reload();
+  done();
+}
+
+// Copy page templates into finished HTML files
+gulp.task('pages', () => {
+  return gulp
+    .src('src/pages/**/*.{html,hbs,handlebars}')
+    .pipe(
+      panini({
+        root: 'src/pages/',
+        layouts: 'src/layouts/',
+        partials: 'src/partials/',
+        data: 'src/data/'
+      })
+    )
+    .pipe(gulp.dest(destAssets.root));
+});
 
 // CSS
 gulp.task('styles', () => {
   const plugins = [
-    autoprefixer({ browsers: ['last 2 versions', 'ie >= 10', 'ios 8'] }),
+    autoprefixer({ browsers: ['last 2 versions', 'ie >= 11', 'ios 8'] }),
     mqpacker({ sort: true })
   ];
 
   gulp
-    .src(srcAssets.styles + '/screen.scss')
+    .src(`${srcAssets.styles}/screen.scss`)
     .pipe(
       sass({
         outputStyle: 'uncompressed',
@@ -95,13 +125,8 @@ gulp.task('scripts', () => {
     .pipe(gulp.dest(destAssets.scripts));
 });
 
-// Clean assets
-gulp.task('clean', () => {
-  return del([destAssets.root]);
-});
-
 // Local server
-gulp.task('browserSync', ['styles'], () => {
+gulp.task('browserSync', () => {
   browserSync.init({
     server: {
       baseDir: destAssets.root
@@ -112,7 +137,7 @@ gulp.task('browserSync', ['styles'], () => {
 // Images
 gulp.task('images', () => {
   return gulp
-    .src(`${srcAssets.images}**/*.+(png|jpg|gif|svg)`)
+    .src(`${srcAssets.images}/**/*.+(png|jpg|gif|svg)`)
     .pipe(imagemin())
     .pipe(gulp.dest(destAssets.images));
 });
@@ -120,38 +145,34 @@ gulp.task('images', () => {
 // Copy
 gulp.task('copy', () => {
   return gulp
-    .src(`${srcAssets.images}**/*.+(png|jpg|gif|svg)`)
+    .src(`${srcAssets.images}/**/*.+(png|jpg|gif|svg)`)
     .pipe(gulp.dest(destAssets.images));
 });
 
-// Template
-gulp.task('template', () => {
-  return gulp
-    .src(`${viewAssets.root}templates/**/*.+(html|nunjucks|njk)`)
-    .pipe(
-      nunjucksMd({
-        path: viewFiles,
-        data: 'config.json'
-      })
-    )
-    .pipe(gulp.dest(destAssets.root));
-});
-
 // Watch
-gulp.task('watch', ['browserSync', 'styles', 'template', 'copy'], () => {
-  gulp.watch(`${srcAssets.images}**/*.+(png|jpg|gif|svg)`, ['copy']);
+gulp.task('watch', ['browserSync'], () => {
+  gulp.watch(`${srcAssets.images}/**/*.+(png|jpg|gif|svg)`, ['copy']);
   gulp.watch(
-    [`${srcAssets.styles}**/*.+(scss|sass|css)`, `${viewAssets.root}**/*.scss`],
-    ['styles']
+    [
+      `${srcAssets.styles}/**/*.+(scss|sass|css)`,
+      `${viewAssets.root}**/*.scss`
+    ],
+    ['styles', browserSync.reload]
   );
-  gulp.watch(`${srcAssets.scripts}**/*.js`, ['scripts', browserSync.reload]);
-  gulp.watch(`${viewAssets.root}**/*.+(html|nunjucks|njk)`, [
-    'template',
+  gulp.watch(`${srcAssets.scripts}/**/*.js`, ['scripts', browserSync.reload]);
+  gulp.watch(`${basePath.src}/**/*.{html,hbs}`, [
+    'pages',
+    'refresh',
     browserSync.reload
   ]);
 });
 
+// Build
+gulp.task('build', () => {
+  runSequence('clean', 'scripts', 'pages', 'styles', 'images');
+});
+
 // Default
 gulp.task('default', () => {
-  runSequence('clean', ['template', 'styles', 'images', 'scripts'], 'watch');
+  runSequence('build', 'watch');
 });
