@@ -6,9 +6,6 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "jquery": "latest",
-    "flickity": "latest",
-    "csswizardry-grids": "latest",
-    "normalize-css": "latest"
+    "jquery": "latest"
   }
 }
