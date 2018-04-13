@@ -1,6 +1,6 @@
 {
   "name": "gulp-starter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Tom Sinclair <contact@helloimtom.com>",
   "description": "Gulp Boilerplate",
   "homepage": "http://helloimtom.com/",
@@ -28,28 +28,28 @@
   "devDependencies": {
     "asset-builder": "^1.1.0",
     "autoprefixer": "^6.7.6",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.2",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "browser-sync": "^2.18.8",
     "css-mqpacker": "^5.0.1",
-    "cssnano": "^3.10.0",
     "del": "^2.2.2",
-    "gulp-changed": "^2.0.0",
+    "eslint": "^4.19.1",
+    "gulp-babel": "^7.0.1",
     "gulp-concat": "^2.6.1",
-    "gulp-flatten": "^0.3.1",
-    "gulp-if": "^2.0.2",
     "gulp-imagemin": "^3.1.1",
-    "gulp-jshint": "^2.0.4",
     "gulp-nunjucks-md": "^1.0.6",
     "gulp-postcss": "^6.3.0",
     "gulp-rename": "^1.2.2",
-    "gulp-rev": "^7.1.2",
     "gulp-sass": "^3.1.0",
-    "gulp-sourcemaps": "^2.4.1",
     "gulp-uglify": "^2.0.1",
     "imagemin-pngcrush": "^5.0.0",
-    "jshint": "^2.9.4",
-    "jshint-stylish": "^2.2.1",
-    "lazypipe": "^1.0.1",
-    "run-sequence": "^1.2.2",
-    "wiredep": "^4.0.0"
+    "run-sequence": "^1.2.2"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
   }
 }
