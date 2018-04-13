@@ -22,16 +22,21 @@
     "node": ">= 4.5"
   },
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "gulp": "^3.9.1",
-    "gulp-nunjucks-render": "^2.0.0"
+    "gulp-nunjucks-render": "^2.0.0",
+    "jquery": "^3.3.1"
   },
   "devDependencies": {
     "asset-builder": "^1.1.0",
     "autoprefixer": "^6.7.6",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.2",
+    "babel-loader": "^7.1.4",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
+    "babel-preset-latest": "^6.24.1",
     "browser-sync": "^2.18.8",
     "css-mqpacker": "^5.0.1",
     "del": "^2.2.2",
@@ -43,9 +48,12 @@
     "gulp-postcss": "^6.3.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^2.0.1",
     "imagemin-pngcrush": "^5.0.0",
-    "run-sequence": "^1.2.2"
+    "run-sequence": "^1.2.2",
+    "webpack": "^4.5.0",
+    "webpack-stream": "^4.0.3"
   },
   "babel": {
     "presets": [

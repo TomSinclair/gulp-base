@@ -1,6 +1,7 @@
 'use strict';
 
 import gulp from 'gulp';
+import sourcemaps from 'gulp-sourcemaps';
 import concat from 'gulp-concat';
 import imagemin from 'gulp-imagemin';
 import nunjucksMd from 'gulp-nunjucks-md';
@@ -13,6 +14,11 @@ import del from 'del';
 import mqpacker from 'css-mqpacker';
 import rename from 'gulp-rename';
 import runSequence from 'run-sequence';
+import babel from 'gulp-babel';
+
+import webpack from 'webpack';
+import webpackStream from 'webpack-stream';
+import webpackConfig from './webpack.config.js';
 
 const reload = browserSync.reload;
 
@@ -80,8 +86,11 @@ gulp.task('styles', () => {
 gulp.task('scripts', () => {
   gulp
     .src(`${srcAssets.scripts}/**`)
-    .pipe(uglify())
+    .pipe(sourcemaps.init())
+    .pipe(webpackStream(webpackConfig), webpack)
     .pipe(concat('main.js'))
+    .pipe(uglify())
+    .pipe(sourcemaps.write('.'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest(destAssets.scripts));
 });
