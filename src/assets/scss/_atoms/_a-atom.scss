@@ -1,4 +1,21 @@
+$column-spans__a-atom: (
+  xsmall: 6,
+  small: 6,
+  medium: 6,
+  large: 12,
+  xlarge: 4,
+  xxlarge: 4
+);
+
+section {
+  @include columns-container-flex;
+}
+
 .a-atom {
-  @include hover-focus() {
+  @include column-flex($column-spans__a-atom);
+  background: blue;
+
+  @include breakpoint('medium+') {
+    background: red;
   }
 }

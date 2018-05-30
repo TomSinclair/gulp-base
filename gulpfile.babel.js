@@ -89,7 +89,7 @@ gulp.task('styles', () => {
     .src(`${srcAssets.styles}/app.scss`)
     .pipe(
       sass({
-        outputStyle: 'compressed',
+        outputStyle: 'uncompressed',
         includePaths: sassFiles
       }).on('error', sass.logError)
     )

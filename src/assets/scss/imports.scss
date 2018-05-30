@@ -2,9 +2,19 @@
 
 @import 'setup/reset';
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ variables
+
+@import 'setup/variables';
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ functions/mixins
 
+@import 'setup/mixins/breakpoint';
+@import 'setup/mixins/grid';
 @import 'setup/mixins/typography';
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ placeholders */
+
+@import 'setup/placeholders';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ typography */
 
@@ -13,10 +23,6 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ colors */
 
 @import 'setup/colors';
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ grid */
-
-@import 'setup/grid';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ third party libs */
 
