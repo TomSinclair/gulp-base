@@ -19,4 +19,9 @@ CVS
 
 node_modules
 bower_components
+<<<<<<< HEAD
 dist
+=======
+dist
+_client
+>>>>>>> es6
