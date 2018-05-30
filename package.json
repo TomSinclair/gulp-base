@@ -38,6 +38,7 @@
     "babel-preset-latest": "^6.24.1",
     "bower-webpack-plugin": "^0.1.9",
     "browser-sync": "^2.18.8",
+    "compression": "^1.7.2",
     "css-mqpacker": "^5.0.1",
     "del": "^2.2.2",
     "eslint": "^4.19.1",
@@ -57,6 +58,8 @@
     "webpack-stream": "^4.0.3"
   },
   "babel": {
-    "presets": ["es2015"]
+    "presets": [
+      "es2015"
+    ]
   }
 }

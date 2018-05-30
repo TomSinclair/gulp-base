@@ -1,24 +1,22 @@
 'use strict';
 
 import autoprefixer from 'autoprefixer';
-import babel from 'gulp-babel';
 import browserSync from 'browser-sync';
-import concat from 'gulp-concat';
+import compression from 'compression';
+import mqpacker from 'css-mqpacker';
 import del from 'del';
 import gulp from 'gulp';
-import handlebars from 'gulp-handlebars';
+import concat from 'gulp-concat';
 import imagemin from 'gulp-imagemin';
-import panini from 'panini';
 import postcss from 'gulp-postcss';
-import mqpacker from 'css-mqpacker';
 import rename from 'gulp-rename';
-import runSequence from 'run-sequence';
 import sass from 'gulp-sass';
 import sourcemaps from 'gulp-sourcemaps';
-import uglify from 'gulp-uglify';
+import panini from 'panini';
+import runSequence from 'run-sequence';
 import webpack from 'webpack';
-import webpackConfig from './webpack.config.js';
 import webpackStream from 'webpack-stream';
+import webpackConfig from './webpack.config.js';
 
 // Base file paths
 const basePath = {
@@ -38,7 +36,7 @@ const viewAssets = {
 // Source paths
 const srcAssets = {
   root: `${basePath.src}/${basePath.assets}/`,
-  images: `${basePath.src}/${basePath.assets}/images`,
+  images: `${basePath.src}/${basePath.assets}/img`,
   scripts: `${basePath.src}/${basePath.assets}/js`,
   styles: `${basePath.src}/${basePath.assets}/scss`
 };
@@ -53,9 +51,6 @@ const destAssets = {
 
 // Sass file paths
 const sassFiles = [srcAssets.styles];
-
-// Hanelbars file paths
-const viewFiles = [viewAssets.root, viewAssets.components, viewAssets.elements];
 
 // Load updated HTML templates and partials into Panini
 gulp.task('refresh', () => {
@@ -96,10 +91,10 @@ gulp.task('styles', () => {
   ];
 
   gulp
-    .src(`${srcAssets.styles}/screen.scss`)
+    .src(`${srcAssets.styles}/app.scss`)
     .pipe(
       sass({
-        outputStyle: 'uncompressed',
+        outputStyle: 'compressed',
         includePaths: sassFiles
       }).on('error', sass.logError)
     )
@@ -115,7 +110,7 @@ gulp.task('styles', () => {
 // JS
 gulp.task('scripts', () => {
   gulp
-    .src(`${srcAssets.scripts}/**`)
+    .src(`${srcAssets.scripts}/**/*`)
     .pipe(sourcemaps.init())
     .pipe(webpackStream(webpackConfig), webpack)
     .pipe(concat('main.js'))
@@ -129,7 +124,8 @@ gulp.task('scripts', () => {
 gulp.task('browserSync', () => {
   browserSync.init({
     server: {
-      baseDir: destAssets.root
+      baseDir: destAssets.root,
+      middleware: [compression()]
     }
   });
 });
@@ -152,15 +148,18 @@ gulp.task('copy', () => {
 // Watch
 gulp.task('watch', ['browserSync'], () => {
   gulp.watch(`${srcAssets.images}/**/*.+(png|jpg|gif|svg)`, ['copy']);
-  gulp.watch(
-    [
-      `${srcAssets.styles}/**/*.+(scss|sass|css)`,
-      `${viewAssets.root}**/*.scss`
-    ],
-    ['styles', browserSync.reload]
-  );
+  gulp.watch(`${srcAssets.root}/**/*.scss`, ['styles', browserSync.reload]);
   gulp.watch(`${srcAssets.scripts}/**/*.js`, ['scripts', browserSync.reload]);
-  gulp.watch(`${basePath.src}/**/*.{html,hbs}`, [
+  gulp.watch(
+    [`${viewAssets.partials}/**/*.hbs`, `${viewAssets.layouts}/**/*.hbs`],
+    ['pages', 'refresh', browserSync.reload]
+  );
+  gulp.watch(`${viewAssets.pages}/*.html`, [
+    'pages',
+    'refresh',
+    browserSync.reload
+  ]);
+  gulp.watch(`${viewAssets.data}/**/*.json`, [
     'pages',
     'refresh',
     browserSync.reload
