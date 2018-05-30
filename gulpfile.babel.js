@@ -12,6 +12,7 @@ import postcss from 'gulp-postcss';
 import rename from 'gulp-rename';
 import sass from 'gulp-sass';
 import sourcemaps from 'gulp-sourcemaps';
+import uglify from 'gulp-uglify';
 import panini from 'panini';
 import runSequence from 'run-sequence';
 import webpack from 'webpack';
@@ -61,12 +62,6 @@ gulp.task('refresh', () => {
 gulp.task('clean', () => {
   return del([destAssets.root]);
 });
-
-// Reload the browser with BrowserSync
-function reload(done) {
-  browser.reload();
-  done();
-}
 
 // Copy page templates into finished HTML files
 gulp.task('pages', () => {
