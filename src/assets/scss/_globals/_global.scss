@@ -1,0 +1,21 @@
+body {
+  font-feature-settings: 'kern';
+  font-kerning: normal;
+  position: relative;
+  text-rendering: optimizeLegibility;
+  font-variant-ligatures: common-ligatures;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body:after {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  width: 1px;
+  height: 1px;
+  margin: -1px 0 0 -1px;
+  position: absolute;
+  left: -1px;
+  top: -1px;
+}

@@ -1,0 +1,143 @@
+// ####################################################
+// Font setup mixins
+//
+// Use the serif/sans-serif mixins directly in the SCSS do any responsive overwrites
+// with within the breakpoint mixin e.g.
+
+/*
+.block {
+  @include serif(18, 25, 500, italic);
+
+  @include breakpoint(large) {
+    font-size: 25px;
+    line-height: 35px;
+  }
+}
+*/
+
+@mixin font-style(
+  $font-size: 17,
+  $line-height: 30,
+  $weight: 400,
+  $style: normal,
+  $letter-spacing: 0
+) {
+  font-size: $font-size * 1px;
+  line-height: $line-height * 1px;
+  font-weight: $weight;
+  font-style: $style;
+  letter-spacing: $letter-spacing;
+}
+
+@mixin sans-serif(
+  $font-size: 17,
+  $line-height: 30,
+  $weight: normal,
+  $style: normal,
+  $letter-spacing: 0
+) {
+  @include font-style(
+    $font-size,
+    $line-height,
+    $weight,
+    $style,
+    $letter-spacing
+  );
+  font-family: $base-font-family;
+}
+
+@mixin title(
+  $font-size: 17,
+  $line-height: 30,
+  $weight: normal,
+  $style: normal,
+  $letter-spacing: 0
+) {
+  @include font-style(
+    $font-size,
+    $line-height,
+    $weight,
+    $style,
+    $letter-spacing
+  );
+  font-family: $title-font-family;
+  -webkit-font-feature-settings: 'liga' 1;
+  -o-font-feature-settings: 'liga' 1;
+  -moz-font-feature-settings: 'liga' 1;
+  -ms-font-feature-settings: 'liga' 1;
+  font-feature-settings: 'liga' 1;
+}
+
+/*
+  @mixin font_smoothing
+
+  Set font smoothing ON or OFF
+*/
+@mixin font-smoothing($value: on) {
+  @if $value == on {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  } @else {
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+  }
+}
+
+/*
+  @mixin text-underline
+
+  Inserts vendor prefixed box shadows
+
+  Parameters:
+  $off - color
+  $on - color for hover
+  $pos - vertical position
+*/
+@mixin text-underline($pos: 14, $off: $color__white, $on: $color__highlight) {
+  text-decoration: none;
+  background: {
+    image: linear-gradient(to bottom, rgba($off, 0) 50%, rgba($off, 1) 50%);
+    repeat: repeat-x;
+    size: 2px 2px;
+    position: 0 $pos * 1px;
+  }
+  // to draw the lines below the regular height of the box...
+  //padding-bottom: 3px;
+  //margin-bottom: -3px;
+
+  &:hover,
+  &:focus {
+    background-image: linear-gradient(
+      to bottom,
+      rgba($on, 0) 50%,
+      rgba($on, 1) 50%
+    );
+  }
+}
+
+/*
+  @mixin hide_text
+
+  Hides text in an element
+*/
+
+@mixin hide-text() {
+  font: 0/0 a;
+  text-shadow: none;
+  color: transparent;
+  overflow: hidden;
+  text-indent: -100%;
+}
+
+/*
+  @mixin active
+
+  Combines hover, focus and active styles
+*/
+@mixin hover-focus {
+  &:hover,
+  &:focus,
+  &:active {
+    @content;
+  }
+}

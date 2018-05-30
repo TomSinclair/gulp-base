@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "title": "Home",
+      "url": "/home.html",
+      "itemClasses": ""
+    },
+    {
+      "title": "About",
+      "url": "/about.html",
+      "itemClasses": ""
+    },
+    {
+      "title": "Contact",
+      "url": "/contact.html",
+      "itemClasses": ""
+    }
+  ]
+}
