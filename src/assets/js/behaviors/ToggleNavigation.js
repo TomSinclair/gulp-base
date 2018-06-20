@@ -21,9 +21,9 @@ BP.Behaviors.ToggleNavigation = function(container) {
   };
 
   const _init = () => {
-    for (let btn of btns) {
+    btns.forEach(function(btn) {
       btn.addEventListener('click', _handleClicks);
-    }
+    });
 
     window.addEventListener('resize', efficientResize);
   };
