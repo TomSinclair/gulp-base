@@ -10,13 +10,13 @@
 
 [data-behavior='Animate'] {
   .js & {
-    // @include media-breakpoint-up(large) {
-    //   opacity: 0;
+    @include breakpoint('large+') {
+      opacity: 0;
 
-    //   &.disabled {
-    //     opacity: 1;
-    //   }
-    // }
+      &.disabled {
+        opacity: 1;
+      }
+    }
 
     @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
       opacity: 1;
@@ -24,9 +24,9 @@
   }
 
   .touch & {
-    // @include media-breakpoint-up(large) {
-    //   opacity: 1;
-    // }
+    @include breakpoint('large+') {
+      opacity: 1;
+    }
   }
 }
 
