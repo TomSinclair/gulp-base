@@ -1,4 +1,9 @@
-import $ from 'jquery';
+// import Handlebars from 'handlebars';
+import jquery from 'jquery';
+import 'picturefill';
+
+window.jQuery = jquery;
+window.$ = jquery;
 
 // set up a master object
 var BP = window.BP || {},
@@ -109,3 +114,33 @@ if (typeof console === 'undefined') {
     }
   };
 }
+
+// Set precompiled templates as Handlebars partials - Fixes "partial not found" error when calling partial within partial via JS
+// Handlebars.partials = Handlebars.templates;
+
+// IE11 forEach polyfill
+if ('NodeList' in window && !NodeList.prototype.forEach) {
+  NodeList.prototype.forEach = function(callback, thisArg) {
+    thisArg = thisArg || window;
+    for (var i = 0; i < this.length; i++) {
+      callback.call(thisArg, this[i], i, this);
+    }
+  };
+}
+
+// IE11 closest polyfill
+if (!Element.prototype.matches)
+  Element.prototype.matches =
+    Element.prototype.msMatchesSelector ||
+    Element.prototype.webkitMatchesSelector;
+
+if (!Element.prototype.closest)
+  Element.prototype.closest = function(s) {
+    var el = this;
+    if (!document.documentElement.contains(el)) return null;
+    do {
+      if (el.matches(s)) return el;
+      el = el.parentElement || el.parentNode;
+    } while (el !== null && el.nodeType === 1);
+    return null;
+  };

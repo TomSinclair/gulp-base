@@ -1,5 +1,4 @@
 'use strict';
-
 import autoprefixer from 'autoprefixer';
 import browserSync from 'browser-sync';
 import compression from 'compression';
@@ -7,12 +6,15 @@ import mqpacker from 'css-mqpacker';
 import del from 'del';
 import gulp from 'gulp';
 import concat from 'gulp-concat';
+import declare from 'gulp-declare';
+import handlebars from 'gulp-handlebars';
 import imagemin from 'gulp-imagemin';
 import postcss from 'gulp-postcss';
 import rename from 'gulp-rename';
 import sass from 'gulp-sass';
 import sourcemaps from 'gulp-sourcemaps';
-import uglify from 'gulp-uglify';
+// import uglify from 'gulp-uglify';
+import wrap from 'gulp-wrap';
 import panini from 'panini';
 import runSequence from 'run-sequence';
 import webpack from 'webpack';
@@ -37,6 +39,7 @@ const viewAssets = {
 // Source paths
 const srcAssets = {
   root: `${basePath.src}/${basePath.assets}/`,
+  fonts: `${basePath.src}/${basePath.assets}/fonts`,
   images: `${basePath.src}/${basePath.assets}/img`,
   scripts: `${basePath.src}/${basePath.assets}/js`,
   styles: `${basePath.src}/${basePath.assets}/scss`
@@ -45,6 +48,7 @@ const srcAssets = {
 // Destination paths
 const destAssets = {
   root: `${basePath.dest}/`,
+  fonts: `${basePath.dest}/fonts/`,
   images: `${basePath.dest}/img/`,
   scripts: `${basePath.dest}/js/`,
   styles: `${basePath.dest}/css/`
@@ -63,6 +67,22 @@ gulp.task('clean', () => {
   return del([destAssets.root]);
 });
 
+// Precompile Handlebars templates
+gulp.task('precompile', () => {
+  return gulp
+    .src('src/partials/**/precompile/*.hbs')
+    .pipe(handlebars())
+    .pipe(wrap('Handlebars.template(<%= contents %>)'))
+    .pipe(
+      declare({
+        namespace: 'Handlebars.templates',
+        noRedeclare: true
+      })
+    )
+    .pipe(concat('templates.js'))
+    .pipe(gulp.dest(`${srcAssets.scripts}/templates`));
+});
+
 // Copy page templates into finished HTML files
 gulp.task('pages', () => {
   return gulp
@@ -72,7 +92,8 @@ gulp.task('pages', () => {
         root: 'src/pages/',
         layouts: 'src/layouts/',
         partials: 'src/partials/',
-        data: 'src/data/'
+        data: 'src/data/',
+        helpers: 'src/helpers/'
       })
     )
     .pipe(gulp.dest(destAssets.root));
@@ -107,9 +128,12 @@ gulp.task('scripts', () => {
   gulp
     .src(`${srcAssets.scripts}/**/*`)
     .pipe(sourcemaps.init())
-    .pipe(webpackStream(webpackConfig), webpack)
+    .pipe(
+      webpackStream(webpackConfig),
+      webpack
+    )
     .pipe(concat('main.js'))
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(sourcemaps.write('.'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest(destAssets.scripts));
@@ -133,6 +157,13 @@ gulp.task('images', () => {
     .pipe(gulp.dest(destAssets.images));
 });
 
+// Fonts
+gulp.task('fonts', () => {
+  gulp
+    .src(`${srcAssets.fonts}/**.+(woff|woff2|ttf)`)
+    .pipe(gulp.dest(destAssets.fonts));
+});
+
 // Copy
 gulp.task('copy', () => {
   return gulp
@@ -142,6 +173,7 @@ gulp.task('copy', () => {
 
 // Watch
 gulp.task('watch', ['browserSync'], () => {
+  gulp.watch(`${srcAssets.fonts}/**/*.+(woff|woff2|ttf)`, ['fonts']);
   gulp.watch(`${srcAssets.images}/**/*.+(png|jpg|gif|svg)`, ['copy']);
   gulp.watch(`${srcAssets.root}/**/*.scss`, ['styles', browserSync.reload]);
   gulp.watch(`${srcAssets.scripts}/**/*.js`, ['scripts', browserSync.reload]);
@@ -163,7 +195,15 @@ gulp.task('watch', ['browserSync'], () => {
 
 // Build
 gulp.task('build', () => {
-  runSequence('clean', 'scripts', 'pages', 'styles', 'images');
+  runSequence(
+    'clean',
+    'precompile',
+    'fonts',
+    'scripts',
+    'pages',
+    'styles',
+    'images'
+  );
 });
 
 // Default
