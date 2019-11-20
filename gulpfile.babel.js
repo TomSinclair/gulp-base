@@ -71,12 +71,17 @@ gulp.task('clean', () => {
 gulp.task('precompile', () => {
   return gulp
     .src('src/partials/**/precompile/*.hbs')
-    .pipe(handlebars())
+    .pipe(
+      handlebars({
+        handlebars: require('handlebars')
+      })
+    )
     .pipe(wrap('Handlebars.template(<%= contents %>)'))
     .pipe(
       declare({
-        namespace: 'Handlebars.templates',
-        noRedeclare: true
+        namespace: 'templates',
+        noRedeclare: true,
+        root: 'Handlebars'
       })
     )
     .pipe(concat('templates.js'))
@@ -128,10 +133,7 @@ gulp.task('scripts', () => {
   gulp
     .src(`${srcAssets.scripts}/**/*`)
     .pipe(sourcemaps.init())
-    .pipe(
-      webpackStream(webpackConfig),
-      webpack
-    )
+    .pipe(webpackStream(webpackConfig), webpack)
     .pipe(concat('main.js'))
     // .pipe(uglify())
     .pipe(sourcemaps.write('.'))

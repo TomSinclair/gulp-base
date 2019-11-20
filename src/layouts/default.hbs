@@ -11,7 +11,11 @@
 
 <body {{#if bodyClasses}}class="{{ bodyClasses }}" {{/if}}>
   {{> body}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.4.2/handlebars.runtime.js"></script>
   <script src="{{ root }}js/main.min.js"></script>
+  <script>
+    Handlebars.partials = Handlebars.templates;
+  </script>
 </body>
 
 </html>

@@ -6,7 +6,7 @@ const config = {
     modules: ['node_modules', 'bower_components'],
     descriptionFiles: ['package.json', 'bower.json'],
     alias: {
-      handlebars: 'handlebars/dist/handlebars.runtime.js'
+      handlebars: 'handlebars/dist/handlebars.js'
     }
   },
   module: {
